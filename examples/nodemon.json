@@ -1,0 +1,10 @@
+{
+  "verbose": false,
+  "ignore": [
+    "*.spec.js",
+    "src/app",
+    "src/migration",
+    "src/seeders",
+    "src/model"
+  ]
+}

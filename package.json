@@ -1,0 +1,67 @@
+{
+  "name": "react-forms",
+  "version": "1.0.0",
+  "main": "dist/react-forms.js",
+  "module": "src/index.js",
+  "author": {
+    "email": "alesmenzel@gmail.com",
+    "name": "Aleš Menzel"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "npm run build -- --watch",
+    "test": "npm run lint && npm run test:suite",
+    "test:suite": "cross-env NODE_ENV=test mocha --require ./test/setup.js --require babel-polyfill --compilers js:babel-core/register ./src/**/*.spec.js",
+    "test:suite:watch": "npm run test:suite -- --watch",
+    "coverage": "cross-env NODE_ENV=test nyc npm test",
+    "lint": "standard ./src/**/*.js",
+    "lint:fix": "npm run lint -- --fix",
+    "prepublishOnly": "npm run build"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:AlesMenzel/react-forms.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^2.6.0",
+    "isemail": "^3.0.0",
+    "prop-types": "^15.5.0",
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0",
+    "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "chai": "^4.0.2",
+    "cross-env": "^5.0.1",
+    "enzyme": "^2.9.1",
+    "jsdom": "^11.1.0",
+    "mocha": "^3.4.2",
+    "nyc": "^11.0.3",
+    "react-test-renderer": "^15.6.1",
+    "standard": "^10.0.2",
+    "webpack": "^3.1.0"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "dist/",
+      ".nyc_output",
+      "examples/"
+    ],
+    "env": [
+      "mocha"
+    ]
+  }
+}
