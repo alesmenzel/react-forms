@@ -45,6 +45,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "chai": "^4.0.2",
     "cross-env": "^5.0.1",
+    "dirty-chai": "^2.0.1",
     "enzyme": "^2.9.1",
     "jsdom": "^11.1.0",
     "mocha": "^3.4.2",

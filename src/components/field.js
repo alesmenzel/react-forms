@@ -1,24 +1,25 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import focus from '../focus'
+import { getArray } from '../utils'
 
 /**
  * Field Component
  */
 class Field extends Component {
   componentWillMount () {
-    const {name, label, value, parse, transform, format, validate} = this.props
-    const {_form: {registerField}} = this.context
+    const { name, label, value, parse, transform, format, validate } = this.props
+    const { _form: { registerField } } = this.context
 
     // Register the field to form
-    registerField(name, label, value, {parse, transform, format, validate})
+    registerField(name, label, value, { parse, transform, format, validate: getArray(validate) })
   }
 
   render () {
-    const {component, children, name, value, parse, transform, format, validate, _focus, ...rest} = this.props
-    const {_form: {fields, handleChange, handleTouch, handleResetField}} = this.context
-    const {focused, onFocus: handleFocus, onBlur: handleBlur} = _focus
-    const field = fields[name]
+    const { component, children, name, value, parse, transform, format, validate, _focus, ...rest } = this.props
+    const { _form: { fields, handleChange, handleTouch, handleResetField } } = this.context
+    const { focused, onFocus: handleFocus, onBlur: handleBlur } = _focus
+    const field = fields.byId[name]
 
     // Do not render fields that are not in state yet (= have no value)
     if (!field) {
@@ -50,17 +51,7 @@ class Field extends Component {
       onBlur,
       onReset,
       // Field values
-      name: field.name,
-      label: field.label,
-      initialValue: field.format(field.initialValue),
-      value: field.format(field.value),
-      pristine: field.pristine,
-      dirty: field.dirty,
-      touched: field.touched,
-      untouched: field.untouched,
-      valid: field.valid,
-      invalid: field.invalid,
-      errors: field.errors
+      field
     }
 
     if (component) {

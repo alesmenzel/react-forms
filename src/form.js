@@ -1,8 +1,315 @@
 import Debug from 'debug'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import cancelable, { getArray } from './utils'
+import cancelable from './utils'
+
 const debug = Debug('react-forms:form')
+
+/**
+ * Adds a field
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const addField = (state, action) => {
+  const { byId, allIds } = state.fields
+  const { key, label, value, parse, transform, format, validate } = action
+
+  return {
+    ...state,
+    fields: {
+      allIds: [...allIds, key],
+      byId: {
+        ...byId,
+        [key]: {
+          value: transform(parse(value)),
+          initialValue: transform(parse(value)),
+          meta: {
+            key: key,
+            label: label,
+            pristine: true,
+            dirty: false,
+            touched: false,
+            untouched: true,
+            valid: true,
+            invalid: false
+          },
+          functions: {
+            parse,
+            transform,
+            format,
+            validate
+          },
+          errors: []
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Changes a field´s value
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const changeFieldValue = (state, action) => {
+  const { fields } = state
+  const { byId } = fields
+  const field = byId[action.key]
+
+  return {
+    ...state,
+    fields: {
+      ...fields,
+      byId: {
+        ...byId,
+        [action.key]: {
+          ...field,
+          value: action.value,
+          meta: {
+            ...field.meta,
+            pristine: false,
+            dirty: true,
+            touched: true,
+            untouched: false
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Marks a field as touched
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const touchField = (state, action) => {
+  const { fields } = state
+  const { byId } = fields
+  const field = byId[action.key]
+
+  return {
+    ...state,
+    fields: {
+      ...fields,
+      byId: {
+        ...byId,
+        [action.key]: {
+          ...field,
+          meta: {
+            ...field.meta,
+            pristine: false,
+            dirty: true,
+            touched: true,
+            untouched: false
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Sets all inputs as touched
+ *
+ * @param {Object} state Current state
+ */
+const touchAllFields = (state) => {
+  const { fields } = state
+  const { byId, allIds } = fields
+
+  return {
+    fields: {
+      ...fields,
+      byId: allIds.reduce((acc, id) => {
+        const field = byId[id]
+
+        acc[id] = {
+          ...field,
+          meta: {
+            ...field.meta,
+            pristine: false,
+            dirty: true,
+            touched: true,
+            untouched: false
+          }
+        }
+        return acc
+      }, {})
+    }
+  }
+}
+
+/**
+ * Sets form errors
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const setErrors = (state, action) => {
+  const { fields } = state
+  const { byId, allIds } = fields
+  const { errors } = action
+
+  return {
+    ...state,
+    fields: {
+      ...fields,
+      byId: allIds.reduce((acc, id) => {
+        const field = byId[id]
+
+        acc[id] = {
+          ...field,
+          meta: {
+            ...field.meta,
+            valid: !errors[id].length,
+            invalid: !!errors[id].length
+          },
+          errors: errors[id]
+        }
+        return acc
+      }, {})
+    }
+  }
+}
+
+/**
+ * Appends error to a field
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const addError = (state, action) => {
+  const { fields } = state
+  const { byId } = fields
+  const { key, error } = action
+  const field = byId[key]
+
+  return {
+    ...state,
+    fields: {
+      ...fields,
+      byId: {
+        ...byId,
+        [key]: {
+          ...field,
+          meta: {
+            ...field.meta,
+            valid: false,
+            invalid: true
+          },
+          errors: [...field.errors, error]
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Resets a given field to its initial value and marks it as pristine/untouched/valid
+ *
+ * @param {Object} state Current state
+ * @param {Object} action Payload
+ */
+const resetField = (state, action) => {
+  const { fields } = state
+  const { byId } = fields
+  const { key } = action
+  const field = byId[key]
+
+  return {
+    fields: {
+      ...fields,
+      byId: {
+        ...byId,
+        [key]: {
+          ...field,
+          value: field.initialValue,
+          meta: {
+            ...field.meta,
+            pristine: true,
+            dirty: false,
+            touched: false,
+            untouched: true,
+            valid: true,
+            invalid: false
+          }
+        },
+        errors: []
+      }
+    }
+  }
+}
+
+/**
+ * Resets all fields to its initial values and marks them as pristine/untouched/valid
+ *
+ * @param {Object} state Current state
+ */
+const resetAllFields = (state) => {
+  const { fields } = state
+  const { byId, allIds } = fields
+
+  return {
+    fields: {
+      ...fields,
+      byId: allIds.reduce((acc, id) => {
+        const field = byId[id]
+
+        acc[id] = {
+          ...field,
+          value: field.initialValue,
+          meta: {
+            ...field.meta,
+            pristine: true,
+            dirty: false,
+            touched: false,
+            untouched: true,
+            valid: true,
+            invalid: false
+          },
+          errors: []
+        }
+        return acc
+      }, {})
+    }
+  }
+}
+
+const initialState = {
+  fields: {
+    byId: {},
+    allIds: []
+  }
+}
+
+const reducer = (state = initialState, action) => {
+  debug(action.type, ', ACTION: ', action, ', STATE: ', state)
+
+  switch (action.type) {
+    case 'REGISTER_FIELD':
+      return addField(state, action)
+    case 'CHANGE_FIELD_VALUE':
+      return changeFieldValue(state, action)
+    case 'TOUCH_FIELD':
+      return touchField(state, action)
+    case 'TOUCH_ALL_FIELDS':
+      return touchAllFields(state)
+    case 'RESET_FIELD':
+      return resetField(state, action)
+    case 'RESET_ALL_FIELDS':
+      return resetAllFields(state)
+    case 'SET_ERRORS':
+      return setErrors(state, action)
+    case 'ADD_ERROR':
+      return addError(state, action)
+    default:
+      return state
+  }
+}
 
 /**
  * Form Higher Order Component for keeping form state
@@ -11,40 +318,231 @@ const debug = Debug('react-forms:form')
  */
 const form = (WrappedComponent) => {
   class Form extends Component {
-    state = {
-      fields: {
-        /*
-         username:
-         - name: 'username' // Input name (same as key)
-         - label: 'Username' // Input display name
-         - value: 'abc', // Field`s value
-         - initialValue: 'abc', // Field initial (default) value
-         - pristine: false, // User has NOT interacted with the field
-         - dirty: true, // User interacted with the field
-         - touched: true // Field lost focus
-         - untouched: false // Field did NOT lose focus
-         - valid: true // Whether the value meets validation requirements
-         - invalid: false // Value does NOT meet validation requirements
-         - errors: ['Field is required', 'Must have at least 5 characters'] // Validation messages
-         - parse: (val) => ... // Parses input (i.e. Date to string)
-         - transform: (val) => ... // Transforms input (i.e. to uppercase)
-         - format: (val) => ... // Formats value (i.e. date string to Date)
-         - validate: [(val) => ..., (val) => ...] // Array of validating rules
-         */
-      },
-      allFields: [],
-      pristine: true,
-      dirty: false,
-      touched: false,
-      untouched: true,
-      valid: true,
-      invalid: false,
-      errors: []
+    state = reducer(undefined, { type: 'INITIALIZATION' })
+
+    cancelFunctions = []
+    submit = () => {}
+    updateId = 0
+
+    dispatch (action) {
+      this.setState(prevState => reducer(prevState, action))
     }
 
-    cancel = () => {}
-    submit = () => {}
+    componentWillUnmount () {
+      this._cancelValidations()
+    }
 
+    /**
+     * Registers a single input
+     *
+     * @param {String} key Input name
+     * @param {String} label Input display name
+     * @param {*} value Initial value to display
+     * @param {Object} functions Transformations and validators
+     */
+    registerField = (key, label, value, functions) => {
+      this.dispatch({ type: 'REGISTER_FIELD', key, label, value, ...functions })
+      this._validate()
+    }
+
+    /**
+     * Registers the submit function
+     *
+     * @param {Function} onSubmit Submit function
+     */
+    registerSubmit = (onSubmit) => {
+      this.submit = onSubmit
+    }
+
+    /**
+     * Handles client input
+     *
+     * @param {String} key Input name
+     * @param {*} value New input value
+     */
+    handleChange = (key, value) => {
+      this.dispatch({ type: 'CHANGE_FIELD_VALUE', key, value })
+      this._validate()
+    }
+
+    /**
+     * Marks a field as touched
+     *
+     * @param {String} key Input name
+     */
+    handleTouch = (key) => {
+      // Short circuit if the field is already touched
+      if (this.state.fields.byId[key].meta.touched) {
+        return
+      }
+
+      this.dispatch({ type: 'TOUCH_FIELD', key })
+      this._validate()
+    }
+
+    /**
+     * Marks all fields as touched
+     */
+    handleTouchAll = () => {
+      this.dispatch({ type: 'TOUCH_ALL_FIELDS' })
+    }
+
+    /**
+     * Adds a field error to the end of the array
+     *
+     * @param {String} key Input name
+     * @param {String} error Error message
+     */
+    _addError = (key, error) => {
+      this.dispatch({ type: 'ADD_ERROR', key, error })
+    }
+
+    /**
+     * Cancels all asynchronous validation and clears cancel functions
+     */
+    _cancelValidations = () => {
+      this.cancelFunctions.forEach((cancel) => {
+        cancel()
+      })
+      this.cancelFunctions = []
+    }
+
+    /**
+     * Validates the field values
+     */
+    _validate = () => {
+      // keep update id to be able to cancel multiple validation calls
+      const updateId = this.updateId < 1000 ? this.updateId + 1 : 0
+      this.updateId = updateId
+
+      // wait for react to update state
+      setImmediate(() => {
+        // Short circuit if the validate function is called again
+        if (updateId !== this.updateId) {
+          debug('Validation skipped')
+          return
+        }
+
+        debug('Validation')
+
+        const { fields } = this.state
+        const { byId, allIds } = fields
+
+        // cancel all running asynchronous validations
+        this._cancelValidations()
+
+        // errors contains all the synchronous errors
+        const errors = allIds.reduce((acc, id) => {
+          const field = byId[id]
+
+          acc[id] = field.functions.validate.reduce((acc, validator) => {
+            const res = validator(field, fields)
+
+            // Check whether the result value is a Promise (or Promise like)
+            if (res instanceof Promise || (typeof res === 'object' && typeof res.then === 'function')) {
+              // asynchronous errors are dispatched separately when they finish
+              const { promise, cancel } = cancelable(res)
+
+              this.cancelFunctions.push(cancel)
+
+              promise.then((error) => {
+                this._addError(id, error)
+              })
+              .catch((err) => {
+                if (err.isCanceled) {
+                  return
+                }
+
+                throw err
+              })
+            } else {
+              if (res !== undefined) {
+                acc.push(res)
+              }
+            }
+
+            return acc
+          }, [])
+
+          return acc
+        }, {})
+
+        this.dispatch({ type: 'SET_ERRORS', errors })
+      })
+    }
+
+    /**
+     * Resets the field to the initial state
+     *
+     * @param {String} key Field identifier
+     */
+    handleResetField = (key) => {
+      this.dispatch({ type: 'RESET_FIELD', key })
+    }
+
+    /**
+     * Resets the form to the initial state
+     */
+    handleResetForm = () => {
+      this.dispatch({ type: 'RESET_ALL_FIELDS' })
+    }
+
+    /**
+     * Handles submitting a form
+     * Sets all fields to touched
+     *
+     * @param {Object} e Event
+     */
+    handleSubmit = async (e) => {
+      e.preventDefault()
+
+      this.handleTouchAll()
+      this._validate()
+
+      // Submit only if all fields are valid
+      if (this.state.invalid) {
+        return
+      }
+
+      const { fields, allFields } = this.state
+
+      const fieldValues = allFields.reduce((acc, fieldName) => {
+        acc[fieldName] = fields[fieldName].value
+        return acc
+      }, {})
+
+      try {
+        await this.submit(fieldValues, this.getState)
+      } catch (err) {
+        if (err instanceof Error) {
+          throw err
+        }
+
+        this.setState((prevState) => {
+          return {
+            fields: prevState.allFields.reduce((acc, fieldName) => {
+              const field = prevState.fields[fieldName]
+              const errors = (err && err.fields && err.fields[fieldName]) || prevState.fields[fieldName].errors
+              const valid = !errors.length
+              const invalid = !valid
+
+              acc[fieldName] = {
+                ...field,
+                errors,
+                valid,
+                invalid
+              }
+              return acc
+            }, {})
+            // TODO form errors, valid, invalid
+          }
+        })
+      }
+    }
+
+    /**
+     * Context interface
+     */
     getChildContext () {
       return {
         _form: {
@@ -62,331 +560,6 @@ const form = (WrappedComponent) => {
         }
       }
     }
-
-    async componentDidUpdate (prevProps, prevState) {
-      debug('Update', this.state, prevState)
-      let res
-      this.cancel()
-
-      // Validate all fields
-      const [hasChanged, validation] = this.validateAllFields(this.state, prevState)
-      const { promise: validateAllFieldsPromise, cancel } = cancelable(validation)
-      this.cancel = cancel
-
-      // Get the validation results
-      try {
-        res = await validateAllFieldsPromise
-      } catch (err) {
-        if (err && err.isCanceled) {
-          // Canceled by another update
-          return
-        }
-
-        throw err
-      }
-
-      // Set State
-      if (hasChanged) {
-        debug('Vadation changed')
-        this.setState((prevState) => {
-          return {
-            fields: prevState.allFields.reduce((acc, fieldName, index) => {
-              const field = prevState.fields[fieldName]
-              const errors = res[index]
-              const valid = !errors.length
-              const invalid = !valid
-
-              acc[fieldName] = {
-                ...field,
-                errors,
-                valid,
-                invalid
-              }
-              return acc
-            }, {})
-          }
-        })
-      }
-    }
-
-    componentWillUnmount () {
-      debug('Unmount')
-      this.cancel()
-    }
-
-    /**
-     * Validates a single field
-     *
-     * @param {Object} field Current value of the field
-     * @param {Object} prevField Previous value of the field
-     * @return {Array} Return value is composed of [hasChanged, fieldValidationPromise]
-     */
-    validateField = (field, prevField) => {
-      debug(`Validating field ${field.name}: Start`)
-      // Run validations only for fields that changed
-      // Input added with a default value
-      if (!prevField ||
-        // If a field was touched
-        (field.touched && prevField.untouched) ||
-        // Field changed its value
-        field.value !== prevField.value) {
-        debug(`Field ${field.name} has changed`)
-
-        const promises = field.validate.map((validator) => {
-          return validator(field)
-        })
-
-        debug(`Validating field ${field.name}: Finished`)
-        return [true, Promise.all(promises)]
-      } else {
-        debug(`Validating field ${field.name}: Finished`)
-        return [false, Promise.all([])]
-      }
-    }
-
-    /**
-     * Validates all fields
-     *
-     * @param {Object} state Current state
-     * @param {Object} prevState Previous state
-     * @return {Array} Return value is composed of [hasChanged, validationPromise]
-     */
-    validateAllFields = (state, prevState) => {
-      const { fields, allFields } = state
-      debug(`Validating all fields: Start`)
-
-      let hasChanged = false
-      const fieldValidations = allFields.map((fieldName) => {
-        const field = fields[fieldName]
-        const prevField = prevState.fields[fieldName]
-
-        const [changed, validationPromise] = this.validateField(field, prevField)
-        if (changed) {
-          hasChanged = true
-        }
-
-        return validationPromise
-      })
-
-      debug(`Validating all fields: Finished`)
-      return [hasChanged, Promise.all(fieldValidations)]
-    }
-
-    /**
-     * Handles client input
-     * Sets field value and marks the field dirty
-     *
-     * @param {String} key Input name (key)
-     * @param {*} value Input value
-     */
-    handleChange = (key, value) =>
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [key]: {
-            ...prevState.fields[key],
-            value,
-            pristine: false,
-            dirty: true
-          }
-        },
-        pristine: false,
-        dirty: true
-      }))
-
-    /**
-     * Registers a single input
-     *
-     * @param {String} key Input name
-     * @param {String} label Input display name
-     * @param {*} value Initial value to display
-     * @param {Object} options Transformations and validators
-     */
-    registerField = (key, label, value, options) => {
-      const { parse, transform, format, validate } = options
-      debug(`Registering field ${key}:${value}`)
-
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [key]: {
-            name: key,
-            label: label || key,
-            value: transform(parse(value)),
-            initialValue: transform(parse(value)),
-            pristine: true,
-            dirty: false,
-            touched: false,
-            untouched: true,
-            valid: true,
-            invalid: false,
-            errors: [],
-            parse,
-            transform,
-            format,
-            validate: getArray(validate)
-          }
-        },
-        allFields: [...prevState.allFields, key]
-      }))
-    }
-
-    /**
-     * Registers the submit function
-     *
-     * @param {Function} onSubmit Submit function
-     */
-    registerSubmit = (onSubmit) => {
-      this.submit = onSubmit
-    }
-
-    /**
-     * Handles submitting a form
-     * Sets all fields to touched
-     */
-    handleSubmit = (e) => {
-      e.preventDefault()
-
-      this.setAllTouched()
-      .then(() => {
-        // Submit only if all fields are valid
-        if (this.state.invalid) {
-          return
-        }
-
-        const { fields, allFields } = this.state
-
-        this.submit(allFields.reduce((acc, fieldName) => {
-          acc[fieldName] = fields[fieldName].value
-          return acc
-        }, {}), this.handleError, this.handleErrors)
-      })
-    }
-
-    /**
-     * Sets all inputs as touched
-     */
-    setAllTouched = () =>
-      new Promise((resolve) => {
-        this.setState(prevState => ({
-          fields: prevState.allFields.reduce((acc, fieldName) => {
-            acc[fieldName] = {
-              ...prevState.fields[fieldName],
-              touched: true,
-              untouched: false
-            }
-            return acc
-          }, {}),
-          touched: true,
-          untouched: false
-        }), resolve)
-      })
-
-    /**
-     *
-     *
-     * @param {Object} errors Field errors
-     * @example {
-       *   username: ['Required', 'Min length 8 characters'],
-       *   email: ['Required', 'Not a valid email address']
-       * }
-     * @param {Array} global [Optional] Global form errors
-     * @example ['The form is not valid']
-     */
-    handleErrors = (errors, global = []) => {
-      console.log('NIY')
-      // const valid = !Object.keys(errors).length
-      // const invalid = !valid
-      //
-      // this.setState(prevState => ({
-      //   fields: prevState.allFields.reduce((acc, fieldName) => {
-      //     const err = getError(errors[fieldName] || [])
-      //     const valid = !err.length
-      //     const invalid = !valid
-      //
-      //     acc[fieldName] = {
-      //       ...prevState.fields[fieldName],
-      //       valid,
-      //       invalid,
-      //       errors: err
-      //     }
-      //     return acc
-      //   }, {}),
-      //   valid,
-      //   invalid,
-      //   errors: getError(global)
-      // }))
-    }
-
-    handleError = () => {
-      console.log('NIY')
-    }
-
-    /**
-     * Handles input touch
-     *
-     * @param {String} key Input name
-     */
-    handleTouch = (key) => {
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [key]: {
-            ...prevState.fields[key],
-            touched: true,
-            untouched: false,
-            pristine: false,
-            dirty: true
-          }
-        },
-        touched: true,
-        untouched: false,
-        pristine: false,
-        dirty: true
-      }))
-    }
-
-    /**
-     * Resets the field to the initial state
-     */
-    handleResetField = (key) =>
-      this.setState(prevState => ({
-        fields: {
-          ...prevState.fields,
-          [key]: {
-            ...prevState.fields[key],
-            value: prevState.fields[key].initialValue,
-            pristine: true,
-            dirty: false,
-            touched: false,
-            untouched: true,
-            valid: true,
-            invalid: false
-          }
-        }
-      }))
-
-    /**
-     * Resets the form to the initial state
-     */
-    handleResetForm = () =>
-      this.setState(prevState => ({
-        fields: prevState.allFields.reduce((acc, fieldName) => {
-          const field = prevState.fields[fieldName]
-
-          acc[fieldName] = {
-            ...field,
-            value: field.initialValue,
-            pristine: true,
-            dirty: false,
-            touched: false,
-            untouched: true,
-            valid: true,
-            invalid: false
-          }
-          return acc
-        }, {})
-      }))
 
     render () {
       return <WrappedComponent {...this.props} />

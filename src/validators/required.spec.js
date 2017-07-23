@@ -11,7 +11,7 @@ describe('isRequired', () => {
     expect(err).to.be.equal('Field is required')
   })
   it('should pass for zero', async () => {
-    const input = { value: '' }
+    const input = { value: 0 }
 
     const err = await checkRequired(input)
     expect(err).to.be.an('undefined')

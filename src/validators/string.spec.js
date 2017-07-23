@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { minimumLength, maximumLength, length, isEqual, isNotEqual, isIn, isNotIn, pattern, isURL } from './string'
+import { minimumLength, maximumLength, length, isEqual, isNotEqual, isIn, isNotIn, pattern } from './string'
 
 describe('minimumLength', () => {
   const checkMinimumLength = minimumLength('Not valid', 5)

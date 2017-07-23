@@ -7,15 +7,15 @@ import formHOC from '../form'
  */
 class Form extends Component {
   componentWillMount () {
-    const {onSubmit} = this.props
-    const {_form: {registerSubmit}} = this.context
+    const { onSubmit } = this.props
+    const { _form: { registerSubmit } } = this.context
 
     registerSubmit(onSubmit)
   }
 
   render () {
-    const {children, ...rest} = this.props
-    const {_form: {handleSubmit}} = this.context
+    const { children, ...rest } = this.props
+    const { _form: { handleSubmit } } = this.context
 
     return (
       <form {...rest} onSubmit={handleSubmit}>

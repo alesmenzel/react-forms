@@ -13,8 +13,8 @@ const focus = (defaultState = {}) =>
         ...defaultState
       }
 
-      onFocus = () => this.setState({focused: true})
-      onBlur = () => this.setState({focused: false})
+      onFocus = () => this.setState({ focused: true })
+      onBlur = () => this.setState({ focused: false })
 
       render () {
         // Interface - available data and functions
