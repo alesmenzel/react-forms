@@ -1,5 +1,4 @@
 const path = require('path')
-const webpack = require('webpack')
 
 module.exports = {
   entry: ['babel-polyfill', './src/index.js'],
@@ -11,15 +10,17 @@ module.exports = {
     publicPath: '/dist/'
   },
   module: {
-    rules: [{
-      test: /\.js$/,
-      include: [path.resolve(__dirname, 'src')],
-      loader: 'babel-loader'
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        include: [path.resolve(__dirname, 'src')],
+        loader: 'babel-loader'
+      }
+    ]
   },
   devtool: 'source-map',
   resolve: {
-    modules: [path.resolve(__dirname, "src"), 'node_modules']
+    modules: [path.resolve(__dirname, 'src'), 'node_modules']
   },
   externals: ['react', 'prop-types']
 }

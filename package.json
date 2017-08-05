@@ -14,7 +14,7 @@
     "test:suite": "cross-env NODE_ENV=test mocha --require ./test/setup.js --require babel-polyfill --compilers js:babel-core/register ./src/**/*.spec.js",
     "test:suite:watch": "npm run test:suite -- --watch",
     "coverage": "cross-env NODE_ENV=test nyc npm test",
-    "lint": "standard ./src/**/*.js",
+    "lint": "eslint ./src/**/*.js",
     "lint:fix": "npm run lint -- --fix",
     "prepublishOnly": "npm run build"
   },
@@ -30,8 +30,6 @@
     "debug": "^2.6.0",
     "isemail": "^3.0.0",
     "prop-types": "^15.5.0",
-    "react": "^15.6.0",
-    "react-dom": "^15.6.0",
     "url": "^0.11.0"
   },
   "devDependencies": {
@@ -43,26 +41,28 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "chai": "^4.0.2",
-    "cross-env": "^5.0.1",
+    "chai": "^4.1.0",
+    "cross-env": "^5.0.2",
     "dirty-chai": "^2.0.1",
     "enzyme": "^2.9.1",
+    "eslint": "^4.3.0",
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-standard-react": "^5.0.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.1.0",
+    "eslint-plugin-standard": "^3.0.1",
     "jsdom": "^11.1.0",
-    "mocha": "^3.4.2",
-    "nyc": "^11.0.3",
+    "mocha": "^3.5.0",
+    "nyc": "^11.1.0",
     "react-test-renderer": "^15.6.1",
-    "standard": "^10.0.2",
-    "webpack": "^3.1.0"
+    "webpack": "^3.4.1"
   },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "dist/",
-      ".nyc_output",
-      "examples/"
-    ],
-    "env": [
-      "mocha"
-    ]
+  "peerDependencies": {
+    "react": "^15.6.0",
+    "react-dom": "^15.6.0"
   }
 }

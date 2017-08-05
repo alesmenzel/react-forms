@@ -9,7 +9,7 @@ chai.use(dirtyChai)
 
 const dumbComponent = () => <div />
 const MyForm = form(dumbComponent)
-const mockFunction = (val) => val
+const mockFunction = val => val
 
 describe('form HOC', () => {
   it('should register a field', () => {
@@ -368,7 +368,7 @@ describe('form HOC', () => {
     })
   })
 
-  it('should fail validation rules', (done) => {
+  it('should fail validation rules', done => {
     const wrapper = mount(<MyForm />)
     const component = wrapper.instance()
 

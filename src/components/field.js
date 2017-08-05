@@ -65,8 +65,11 @@ class Field extends Component {
 
 Field.propTypes = {
   name: PropTypes.string.isRequired,
+  component: PropTypes.node,
+  children: PropTypes.node,
   value: PropTypes.any.isRequired,
   label: PropTypes.string,
+  _focus: PropTypes.object,
   parse: PropTypes.func,
   transform: PropTypes.func,
   format: PropTypes.func,
