@@ -175,6 +175,7 @@ const form = WrappedComponent => {
                 .then((res) => {
                   this.dispatch({ type: 'VALIDATION_FIELD_DONE', key: field.meta.key })
                 })
+                .catch(console.log)
             )
 
             return acc
@@ -182,7 +183,7 @@ const form = WrappedComponent => {
 
           this.dispatch({ type: 'SET_ERRORS', errors })
 
-          Promise.all(allPromises).then(resolve)
+          Promise.all(allPromises).then(resolve).catch(reject)
         })
       })
     }

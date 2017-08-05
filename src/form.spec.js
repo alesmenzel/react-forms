@@ -7,6 +7,8 @@ import { isRequired, minimumLength } from './validators/index'
 
 chai.use(dirtyChai)
 
+process.on('unhandledRejection', (reason, promise) => console.log({reason}))
+
 const dumbComponent = () => <div />
 const MyForm = form(dumbComponent)
 const mockFunction = val => val
@@ -41,7 +43,8 @@ describe('form HOC', () => {
           touched: false,
           untouched: true,
           valid: true,
-          invalid: false
+          invalid: false,
+          validating: false
         },
         functions: {
           parse: mockFunction,
@@ -82,7 +85,8 @@ describe('form HOC', () => {
           touched: true,
           untouched: false,
           valid: true,
-          invalid: false
+          invalid: false,
+          validating: false
         },
         functions: {
           parse: mockFunction,
@@ -129,7 +133,8 @@ describe('form HOC', () => {
         touched: true,
         untouched: false,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -151,7 +156,8 @@ describe('form HOC', () => {
         touched: false,
         untouched: true,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -198,7 +204,8 @@ describe('form HOC', () => {
         touched: false,
         untouched: true,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -220,7 +227,8 @@ describe('form HOC', () => {
         touched: true,
         untouched: false,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -267,7 +275,8 @@ describe('form HOC', () => {
         touched: false,
         untouched: true,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -289,7 +298,8 @@ describe('form HOC', () => {
         touched: false,
         untouched: true,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -334,7 +344,8 @@ describe('form HOC', () => {
         touched: true,
         untouched: false,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -356,7 +367,8 @@ describe('form HOC', () => {
         touched: true,
         untouched: false,
         valid: true,
-        invalid: false
+        invalid: false,
+        validating: false
       },
       functions: {
         parse: mockFunction,
@@ -368,7 +380,7 @@ describe('form HOC', () => {
     })
   })
 
-  it('should fail validation rules', done => {
+  it('should fail validation rules', async () => {
     const wrapper = mount(<MyForm />)
     const component = wrapper.instance()
 
@@ -382,33 +394,34 @@ describe('form HOC', () => {
       validate: [required, minLength]
     })
 
-    component.handleTouch('input')
+    await component.handleTouch('input')
 
-    setImmediate(() => {
-      const { byId } = component.state.fields
+    const { byId } = component.state.fields
 
-      expect(byId.input).to.deep.equal({
-        value: '',
-        initialValue: '',
-        meta: {
-          key: 'input',
-          label: 'Input',
-          pristine: false,
-          dirty: true,
-          touched: true,
-          untouched: false,
-          valid: false,
-          invalid: true
-        },
-        functions: {
-          parse: mockFunction,
-          transform: mockFunction,
-          format: mockFunction,
-          validate: [required, minLength]
-        },
-        errors: ['Required', 'Must be at least 3 characters long']
+    return Promise.resolve()
+      .then(() => {
+        expect(byId.input).to.deep.equal({
+          value: '',
+          initialValue: '',
+          meta: {
+            key: 'input',
+            label: 'Input',
+            pristine: false,
+            dirty: true,
+            touched: true,
+            untouched: false,
+            valid: false,
+            invalid: true,
+            validating: false
+          },
+          functions: {
+            parse: mockFunction,
+            transform: mockFunction,
+            format: mockFunction,
+            validate: [required, minLength]
+          },
+          errors: ['Required', 'Must be at least 3 characters long']
+        })
       })
-      done()
-    })
   })
 })
