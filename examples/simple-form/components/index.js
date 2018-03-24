@@ -1,1 +1,1 @@
-export SampleForm from './sample-form'
+export SampleForm from './sample-form';

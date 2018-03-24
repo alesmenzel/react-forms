@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 /**
  * Handles focusing a component
@@ -9,25 +9,25 @@ const focus = (defaultState = {}) => WrappedComponent => {
   class Focus extends Component {
     state = {
       focused: false,
-      ...defaultState
-    }
+      ...defaultState,
+    };
 
-    onFocus = () => this.setState({ focused: true })
-    onBlur = () => this.setState({ focused: false })
+    onFocus = () => this.setState({ focused: true });
+    onBlur = () => this.setState({ focused: false });
 
-    render () {
+    render() {
       // Interface - available data and functions
       const exported = {
         ...this.state,
         onFocus: this.onFocus,
-        onBlur: this.onBlur
-      }
+        onBlur: this.onBlur,
+      };
 
-      return <WrappedComponent _focus={exported} {...this.props} />
+      return <WrappedComponent _focus={exported} {...this.props} />;
     }
   }
 
-  return Focus
-}
+  return Focus;
+};
 
-export default focus
+export default focus;

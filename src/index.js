@@ -1,3 +1,3 @@
-export * from './components'
-export * from './validators'
-export * from './utils'
+export * from './components';
+export * from './validators';
+export * from './utils';

@@ -1,3 +1,12 @@
 .babelrc
-src
+.prettierrc
+.prettierignore
+.eslintrc
+.eslintignore
+webpack.config.js
+.circleci/
+.vscode/
+src/
+test/
 CODE_OF_CONDUCT.md
+NEXT.md

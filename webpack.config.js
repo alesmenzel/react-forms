@@ -1,26 +1,40 @@
-const path = require('path')
+const path = require('path');
+const webpack = require('webpack');
 
-module.exports = {
-  entry: ['babel-polyfill', './src/index.js'],
+const env = process.env.NODE_ENV;
+
+const config = {
+  mode: env || 'development',
+  entry: ['./src/index.js'],
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'react-forms.js',
-    library: 'reactForms',
+    // path: path.resolve(__dirname, 'dist'),
+    // filename: 'react-forms.js',
+    library: 'ReactForms',
     libraryTarget: 'umd',
-    publicPath: '/dist/'
+    // publicPath: '/dist/',
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        include: [path.resolve(__dirname, 'src')],
-        loader: 'babel-loader'
-      }
-    ]
+        exclude: /node_modules/,
+        loaders: ['babel-loader'],
+      },
+    ],
   },
-  devtool: 'source-map',
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(env),
+    }),
+  ],
   resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules']
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
   },
-  externals: ['react', 'prop-types']
+  externals: ['react', 'prop-types'],
+};
+
+if (env === 'development') {
+  config.devtool = 'source-map';
 }
+
+module.exports = config;

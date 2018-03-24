@@ -1,4 +1,4 @@
-import * as t from './action-types'
+import * as t from './action-types';
 
 /**
  * Submit request initiated
@@ -7,8 +7,8 @@ import * as t from './action-types'
  */
 export const request = payload => ({
   type: t.SUBMIT_REQUEST,
-  payload
-})
+  payload,
+});
 
 /**
  * Submit success
@@ -17,8 +17,8 @@ export const request = payload => ({
  */
 export const success = payload => ({
   type: t.SUBMIT_SUCCESS,
-  payload
-})
+  payload,
+});
 
 /**
  * Submit failed
@@ -29,5 +29,5 @@ export const success = payload => ({
 export const failure = (message, validation) => ({
   type: t.SUBMIT_FAILURE,
   message,
-  validation
-})
+  validation,
+});

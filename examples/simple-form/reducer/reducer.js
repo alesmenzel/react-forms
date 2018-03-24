@@ -1,27 +1,27 @@
-import * as t from './action-types'
+import * as t from './action-types';
 
 const initialState = {
-  isSubmitting: false
-}
+  isSubmitting: false,
+};
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case t.SUBMIT_REQUEST:
       return {
         ...state,
-        isSubmitting: true
-      }
+        isSubmitting: true,
+      };
     case t.SUBMIT_SUCCESS:
       return {
         ...state,
-        isSubmitting: false
-      }
+        isSubmitting: false,
+      };
     case t.SUBMIT_FAILURE:
       return {
         ...state,
-        isSubmitting: false
-      }
+        isSubmitting: false,
+      };
     default:
-      return state
+      return state;
   }
-}
+};

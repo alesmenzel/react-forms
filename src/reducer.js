@@ -1,5 +1,6 @@
-import Debug from 'debug'
-const debug = Debug('react-forms:form:reducer')
+import Debug from 'debug';
+
+const debug = Debug('react-forms:form:reducer');
 
 /**
  * Adds a field
@@ -8,8 +9,8 @@ const debug = Debug('react-forms:form:reducer')
  * @param {Object} action Payload
  */
 const addField = (state, action) => {
-  const { byId, allIds } = state.fields
-  const { key, label, value, parse, transform, format, validate } = action
+  const { byId, allIds } = state.fields;
+  const { key, label, value, parse, transform, format, validate } = action;
 
   return {
     ...state,
@@ -21,28 +22,28 @@ const addField = (state, action) => {
           value: transform(parse(value)),
           initialValue: transform(parse(value)),
           meta: {
-            key: key,
-            label: label,
+            key,
+            label,
             pristine: true,
             dirty: false,
             touched: false,
             untouched: true,
             valid: true,
             invalid: false,
-            validating: false
+            validating: false,
           },
           functions: {
             parse,
             transform,
             format,
-            validate
+            validate,
           },
-          errors: []
-        }
-      }
-    }
-  }
-}
+          errors: [],
+        },
+      },
+    },
+  };
+};
 
 /**
  * Changes a field´s value
@@ -51,9 +52,9 @@ const addField = (state, action) => {
  * @param {Object} action Payload
  */
 const changeFieldValue = (state, action) => {
-  const { fields } = state
-  const { byId } = fields
-  const field = byId[action.key]
+  const { fields } = state;
+  const { byId } = fields;
+  const field = byId[action.key];
 
   return {
     ...state,
@@ -69,13 +70,13 @@ const changeFieldValue = (state, action) => {
             pristine: false,
             dirty: true,
             touched: true,
-            untouched: false
-          }
-        }
-      }
-    }
-  }
-}
+            untouched: false,
+          },
+        },
+      },
+    },
+  };
+};
 
 /**
  * Marks a field as touched
@@ -84,9 +85,9 @@ const changeFieldValue = (state, action) => {
  * @param {Object} action Payload
  */
 const touchField = (state, action) => {
-  const { fields } = state
-  const { byId } = fields
-  const field = byId[action.key]
+  const { fields } = state;
+  const { byId } = fields;
+  const field = byId[action.key];
 
   return {
     ...state,
@@ -101,13 +102,13 @@ const touchField = (state, action) => {
             pristine: false,
             dirty: true,
             touched: true,
-            untouched: false
-          }
-        }
-      }
-    }
-  }
-}
+            untouched: false,
+          },
+        },
+      },
+    },
+  };
+};
 
 /**
  * Sets all inputs as touched
@@ -115,14 +116,14 @@ const touchField = (state, action) => {
  * @param {Object} state Current state
  */
 const touchAllFields = state => {
-  const { fields } = state
-  const { byId, allIds } = fields
+  const { fields } = state;
+  const { byId, allIds } = fields;
 
   return {
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
-        const field = byId[id]
+        const field = byId[id];
 
         acc[id] = {
           ...field,
@@ -131,14 +132,14 @@ const touchAllFields = state => {
             pristine: false,
             dirty: true,
             touched: true,
-            untouched: false
-          }
-        }
-        return acc
-      }, {})
-    }
-  }
-}
+            untouched: false,
+          },
+        };
+        return acc;
+      }, {}),
+    },
+  };
+};
 
 /**
  * Sets form errors
@@ -147,16 +148,16 @@ const touchAllFields = state => {
  * @param {Object} action Payload
  */
 const setErrors = (state, action) => {
-  const { fields } = state
-  const { byId, allIds } = fields
-  const { errors } = action
+  const { fields } = state;
+  const { byId, allIds } = fields;
+  const { errors } = action;
 
   return {
     ...state,
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
-        const field = byId[id]
+        const field = byId[id];
 
         acc[id] = {
           ...field,
@@ -164,15 +165,15 @@ const setErrors = (state, action) => {
             ...field.meta,
             valid: !errors[id].length,
             invalid: !!errors[id].length,
-            validating: true
+            validating: true,
           },
-          errors: errors[id]
-        }
-        return acc
-      }, {})
-    }
-  }
-}
+          errors: errors[id],
+        };
+        return acc;
+      }, {}),
+    },
+  };
+};
 
 /**
  * Appends error to a field
@@ -181,10 +182,10 @@ const setErrors = (state, action) => {
  * @param {Object} action Payload
  */
 const addError = (state, action) => {
-  const { fields } = state
-  const { byId } = fields
-  const { key, error } = action
-  const field = byId[key]
+  const { fields } = state;
+  const { byId } = fields;
+  const { key, error } = action;
+  const field = byId[key];
 
   return {
     ...state,
@@ -197,14 +198,14 @@ const addError = (state, action) => {
           meta: {
             ...field.meta,
             valid: false,
-            invalid: true
+            invalid: true,
           },
-          errors: [...field.errors, error]
-        }
-      }
-    }
-  }
-}
+          errors: [...field.errors, error],
+        },
+      },
+    },
+  };
+};
 
 /**
  * Resets a given field to its initial value and marks it as pristine/untouched/valid
@@ -213,10 +214,10 @@ const addError = (state, action) => {
  * @param {Object} action Payload
  */
 const resetField = (state, action) => {
-  const { fields } = state
-  const { byId } = fields
-  const { key } = action
-  const field = byId[key]
+  const { fields } = state;
+  const { byId } = fields;
+  const { key } = action;
+  const field = byId[key];
 
   return {
     fields: {
@@ -233,14 +234,14 @@ const resetField = (state, action) => {
             touched: false,
             untouched: true,
             valid: true,
-            invalid: false
-          }
+            invalid: false,
+          },
         },
-        errors: []
-      }
-    }
-  }
-}
+        errors: [],
+      },
+    },
+  };
+};
 
 /**
  * Resets all fields to its initial values and marks them as pristine/untouched/valid
@@ -248,14 +249,14 @@ const resetField = (state, action) => {
  * @param {Object} state Current state
  */
 const resetAllFields = state => {
-  const { fields } = state
-  const { byId, allIds } = fields
+  const { fields } = state;
+  const { byId, allIds } = fields;
 
   return {
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
-        const field = byId[id]
+        const field = byId[id];
 
         acc[id] = {
           ...field,
@@ -267,21 +268,21 @@ const resetAllFields = state => {
             touched: false,
             untouched: true,
             valid: true,
-            invalid: false
+            invalid: false,
           },
-          errors: []
-        }
-        return acc
-      }, {})
-    }
-  }
-}
+          errors: [],
+        };
+        return acc;
+      }, {}),
+    },
+  };
+};
 
 const validationFieldDone = (state, action) => {
-  const { fields } = state
-  const { byId } = fields
-  const { key } = action
-  const field = byId[key]
+  const { fields } = state;
+  const { byId } = fields;
+  const { key } = action;
+  const field = byId[key];
 
   return {
     fields: {
@@ -292,46 +293,46 @@ const validationFieldDone = (state, action) => {
           ...field,
           meta: {
             ...field.meta,
-            validating: false
-          }
-        }
-      }
-    }
-  }
-}
+            validating: false,
+          },
+        },
+      },
+    },
+  };
+};
 
 const initialState = {
   fields: {
     byId: {},
-    allIds: []
-  }
-}
+    allIds: [],
+  },
+};
 
 const reducer = (state = initialState, action) => {
-  debug(action.type, ', ACTION: ', action, ', STATE: ', state)
+  debug(action.type, ', ACTION: ', action, ', STATE: ', state);
 
   switch (action.type) {
     case 'REGISTER_FIELD':
-      return addField(state, action)
+      return addField(state, action);
     case 'CHANGE_FIELD_VALUE':
-      return changeFieldValue(state, action)
+      return changeFieldValue(state, action);
     case 'TOUCH_FIELD':
-      return touchField(state, action)
+      return touchField(state, action);
     case 'TOUCH_ALL_FIELDS':
-      return touchAllFields(state)
+      return touchAllFields(state);
     case 'RESET_FIELD':
-      return resetField(state, action)
+      return resetField(state, action);
     case 'RESET_ALL_FIELDS':
-      return resetAllFields(state)
+      return resetAllFields(state);
     case 'SET_ERRORS':
-      return setErrors(state, action)
+      return setErrors(state, action);
     case 'ADD_ERROR':
-      return addError(state, action)
+      return addError(state, action);
     case 'VALIDATION_FIELD_DONE':
-      return validationFieldDone(state, action)
+      return validationFieldDone(state, action);
     default:
-      return state
+      return state;
   }
-}
+};
 
-export default reducer
+export default reducer;

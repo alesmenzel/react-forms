@@ -1,4 +1,4 @@
-import { getFunction } from '../utils'
+import { getFunction } from '../utils';
 
 /**
  * Validates required value
@@ -6,13 +6,13 @@ import { getFunction } from '../utils'
  * @param {String|Function} msg Message
  */
 export const isRequired = msg => {
-  const getMessage = getFunction(msg)
+  const getMessage = getFunction(msg);
 
-  return (field) => {
-    const { value } = field
+  return field => {
+    const { value } = field;
 
     if (value === '') {
-      return getMessage(field, {})
+      return getMessage(field, {});
     }
-  }
-}
+  };
+};

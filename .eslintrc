@@ -5,15 +5,12 @@
     "allowImportExportEverywhere": true,
     "codeFrame": false,
     "ecmaFeatures": {
-      "experimentalObjectRestSpread": true,
       "jsx": true
     }
   },
-  "extends": ["standard", "standard-react"],
+  "extends": ["airbnb", "plugin:prettier/recommended"],
   "env": {
     "browser": true,
-    "es6": true,
-    "node": true,
     "mocha": true
   }
 }
