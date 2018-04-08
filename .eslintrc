@@ -8,11 +8,7 @@
       "jsx": true
     }
   },
-  "extends": [
-    "airbnb",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended"
-  ],
+  "extends": ["airbnb", "plugin:prettier/recommended"],
   "env": {
     "browser": true,
     "mocha": true

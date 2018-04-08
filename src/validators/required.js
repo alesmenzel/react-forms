@@ -11,7 +11,7 @@ export const isRequired = msg => {
   return field => {
     const { value } = field;
 
-    if (!value) {
+    if (!value && value !== 0) {
       return getMessage(field, {});
     }
 

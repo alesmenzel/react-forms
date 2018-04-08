@@ -1,3 +1,10 @@
-/node_modules
-/dist
-/.vscode
+# Build directories
+dist/
+es/
+lib/
+
+# IDE settings
+.vscode/
+
+# CI settings
+.circleci/
