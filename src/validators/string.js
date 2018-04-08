@@ -15,6 +15,8 @@ export const minimumLength = (msg, min) => {
     if (value.length < min) {
       return getMessage(field, { msg, min });
     }
+
+    return undefined;
   };
 };
 
@@ -33,6 +35,8 @@ export const maximumLength = (msg, max) => {
     if (value.length > max) {
       return getMessage(field, { msg, max });
     }
+
+    return undefined;
   };
 };
 
@@ -52,6 +56,8 @@ export const length = (msg, min, max) => {
     if (value.length < min || value.length > max) {
       return getMessage(field, { msg, min, max });
     }
+
+    return undefined;
   };
 };
 
@@ -70,6 +76,8 @@ export const isEqual = (msg, comparison) => {
     if (value !== comparison) {
       return getMessage(field, { msg, comparison });
     }
+
+    return undefined;
   };
 };
 
@@ -88,6 +96,8 @@ export const isNotEqual = (msg, comparison) => {
     if (value === comparison) {
       return getMessage(field, { msg, comparison });
     }
+
+    return undefined;
   };
 };
 
@@ -106,6 +116,8 @@ export const isIn = (msg, comparisons) => {
     if (!comparisons.includes(value)) {
       return getMessage(field, { msg, comparisons });
     }
+
+    return undefined;
   };
 };
 
@@ -124,6 +136,8 @@ export const isNotIn = (msg, comparisons) => {
     if (comparisons.includes(value)) {
       return getMessage(field, { msg, comparisons });
     }
+
+    return undefined;
   };
 };
 
@@ -131,18 +145,20 @@ export const isNotIn = (msg, comparisons) => {
  * Validates if value matches a pattern
  *
  * @param {String|Function} msg Message
- * @param {RegExp} pattern RegExp pattern (i.e. /[a-z]{9}/i)
+ * @param {RegExp} match RegExp pattern (i.e. /[a-z]{9}/i)
  * @param {String} [flags] RegExp flags (i.e. 'i'), flags can be specified in the pattern
  */
-export const pattern = (msg, pattern, flags) => {
+export const pattern = (msg, match, flags) => {
   const getMessage = getFunction(msg);
-  const regex = new RegExp(pattern, flags);
+  const regex = new RegExp(match, flags);
 
   return field => {
     const { value } = field;
 
     if (!value.match(regex)) {
-      return getMessage(field, { msg, pattern, flags });
+      return getMessage(field, { msg, match, flags });
     }
+
+    return undefined;
   };
 };

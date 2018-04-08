@@ -15,14 +15,11 @@ const cancelable = promise => {
 
       return resolve(val);
     });
-    promise.catch(error => {
-      if (isCanceled) {
-        const err = new Error('Promise canceled');
-        err.isCanceled = true;
-        return reject(err);
-      }
+    promise.catch(err => {
+      // eslint-disable-next-line
+      err.isCanceled = isCanceled;
 
-      return reject(error);
+      return reject(err);
     });
   });
 

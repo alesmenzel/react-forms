@@ -1,3 +1,17 @@
 {
-  "presets": ["env", "react", "stage-2"]
+  "presets": ["env", "react", "stage-2"],
+  "plugins": [
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
+    ]
+  ],
+  "env": {
+    "production": {
+      "plugins": ["transform-react-remove-prop-types"]
+    }
+  }
 }

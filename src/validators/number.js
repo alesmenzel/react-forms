@@ -12,9 +12,11 @@ export const minimum = (msg, min) => {
   return field => {
     const { value } = field;
 
-    if (typeof value !== 'number' || isNaN(value) || value < min) {
+    if (typeof value !== 'number' || Number.isNaN(value) || value < min) {
       return getMessage(field, { msg, min });
     }
+
+    return undefined;
   };
 };
 
@@ -30,9 +32,11 @@ export const maximum = (msg, max) => {
   return field => {
     const { value } = field;
 
-    if (typeof value !== 'number' || isNaN(value) || value > max) {
+    if (typeof value !== 'number' || Number.isNaN(value) || value > max) {
       return getMessage(field, { msg, max });
     }
+
+    return undefined;
   };
 };
 
@@ -51,12 +55,14 @@ export const range = (msg, min, max) => {
 
     if (
       typeof value !== 'number' ||
-      isNaN(value) ||
+      Number.isNaN(value) ||
       value < min ||
       value > max
     ) {
       return getMessage(field, { msg, min, max });
     }
+
+    return undefined;
   };
 };
 
@@ -74,6 +80,8 @@ export const isNumber = msg => {
     if (!Number.isFinite(value)) {
       return getMessage(field, { msg });
     }
+
+    return undefined;
   };
 };
 
@@ -91,6 +99,8 @@ export const isInteger = msg => {
     if (!Number.isInteger(value)) {
       return getMessage(field, { msg });
     }
+
+    return undefined;
   };
 };
 
@@ -107,11 +117,13 @@ export const isFloat = msg => {
 
     if (
       typeof value !== 'number' ||
-      isNaN(value) ||
-      !isFinite(value) ||
+      Number.isNaN(value) ||
+      !Number.isFinite(value) ||
       value % 1 === 0
     ) {
       return getMessage(field, { msg });
     }
+
+    return undefined;
   };
 };

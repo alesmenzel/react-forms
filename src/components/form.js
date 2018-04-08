@@ -1,37 +1,35 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import formHOC from '../form';
+import Provider from './provider';
+import FormContext from './context';
+import FormRegister from './form-register';
 
-/**
- * Form Component
- */
-class Form extends Component {
-  componentWillMount() {
-    const { onSubmit } = this.props;
-    const { _form: { registerSubmit } } = this.context;
+const Form = props => (
+  <Provider>
+    <FormContext.Consumer>
+      {({ handleSubmit, registerSubmit, isRegistered }) => {
+        const passProps = {
+          // User defined props
+          ...props,
+          // Handlers
+          registerSubmit,
+          isRegistered,
+          handleSubmit,
+        };
 
-    registerSubmit(onSubmit);
-  }
-
-  render() {
-    const { children, ...rest } = this.props;
-    const { _form: { handleSubmit } } = this.context;
-
-    return (
-      <form {...rest} onSubmit={handleSubmit}>
-        {children}
-      </form>
-    );
-  }
-}
+        return <FormRegister {...passProps} />;
+      }}
+    </FormContext.Consumer>
+  </Provider>
+);
 
 Form.propTypes = {
-  children: PropTypes.node,
+  children: PropTypes.any,
   onSubmit: PropTypes.func.isRequired,
 };
 
-Form.contextTypes = {
-  _form: PropTypes.object.isRequired,
+Form.defaultProps = {
+  children: null,
 };
 
-export default formHOC(Form);
+export default Form;

@@ -15,5 +15,7 @@ export const isEmail = msg => {
     if (!isemail.validate(value)) {
       return getMessage(field, { msg });
     }
+
+    return undefined;
   };
 };

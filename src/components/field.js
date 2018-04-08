@@ -1,101 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import focus from '../focus';
-import { getArray } from '../utils';
+import FormContext from './context';
+import FieldRegister from './field-register';
 
-/**
- * Field Component
- */
-class Field extends Component {
-  componentWillMount() {
-    const {
-      name,
-      label,
-      value,
-      parse,
-      transform,
-      format,
-      validate,
-    } = this.props;
-    const { _form: { registerField } } = this.context;
+const Field = props => (
+  <FormContext.Consumer>
+    {({
+      registerField,
+      fields,
+      handleChange,
+      handleTouch,
+      handleResetField,
+    }) => {
+      const passProps = {
+        // User defined props
+        ...props,
+        // Fields
+        field: fields.byId[props.name],
+        fields,
+        // Handlers
+        registerField,
+        isRegistered: !!fields.byId[props.name],
+        handleChange,
+        handleTouch,
+        handleResetField,
+      };
 
-    // Register the field to form
-    registerField(name, label, value, {
-      parse,
-      transform,
-      format,
-      validate: getArray(validate),
-    });
-  }
-
-  render() {
-    const {
-      component,
-      children,
-      name,
-      value,
-      parse,
-      transform,
-      format,
-      validate,
-      _focus,
-      ...rest
-    } = this.props;
-    const {
-      _form: { fields, handleChange, handleTouch, handleResetField },
-    } = this.context;
-    const { focused, onFocus: handleFocus, onBlur: handleBlur } = _focus;
-    const field = fields.byId[name];
-
-    // Do not render fields that are not in state yet (= have no value)
-    if (!field) {
-      return null;
-    }
-
-    const onChange = val => {
-      handleChange(name, transform(val, fields));
-    };
-
-    const onFocus = () => {
-      handleFocus();
-    };
-
-    const onBlur = () => {
-      handleBlur();
-      handleTouch(name);
-    };
-
-    const onReset = () => handleResetField(name);
-
-    const passProps = {
-      // User defined props
-      ...rest,
-      // Field handlers
-      onChange,
-      focused,
-      onFocus,
-      onBlur,
-      onReset,
-      // Field values
-      field,
-    };
-
-    if (component) {
-      const Component = component;
-      return <Component {...passProps} />;
-    }
-
-    return React.cloneElement(React.Children.only(children), passProps);
-  }
-}
+      return <FieldRegister {...passProps} />;
+    }}
+  </FormContext.Consumer>
+);
 
 Field.propTypes = {
   name: PropTypes.string.isRequired,
-  component: PropTypes.node,
-  children: PropTypes.node,
   value: PropTypes.any.isRequired,
+  component: PropTypes.any.isRequired,
   label: PropTypes.string,
-  _focus: PropTypes.object,
   parse: PropTypes.func,
   transform: PropTypes.func,
   format: PropTypes.func,
@@ -106,14 +46,11 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-  validate: [],
+  label: '',
   parse: val => val,
   transform: val => val,
   format: val => val,
+  validate: [],
 };
 
-Field.contextTypes = {
-  _form: PropTypes.object.isRequired,
-};
-
-export default focus()(Field);
+export default Field;

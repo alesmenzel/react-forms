@@ -8,9 +8,19 @@
       "jsx": true
     }
   },
-  "extends": ["airbnb", "plugin:prettier/recommended"],
+  "extends": [
+    "airbnb",
+    "plugin:react/recommended",
+    "plugin:prettier/recommended"
+  ],
   "env": {
     "browser": true,
     "mocha": true
+  },
+  "rules": {
+    "react/jsx-filename-extension": "off",
+    "react/forbid-prop-types": "off",
+    "react/sort-comp": "off",
+    "import/prefer-default-export": "off"
   }
 }

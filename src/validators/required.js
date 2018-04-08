@@ -11,8 +11,10 @@ export const isRequired = msg => {
   return field => {
     const { value } = field;
 
-    if (value === '') {
+    if (!value) {
       return getMessage(field, {});
     }
+
+    return undefined;
   };
 };
