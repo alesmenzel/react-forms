@@ -63,6 +63,7 @@ const changeFieldValue = (state, action) => {
   const { fields } = state;
   const { byId } = fields;
   const field = byId[action.key];
+  const { parse, transform } = field.functions;
 
   return {
     ...state,
@@ -72,7 +73,7 @@ const changeFieldValue = (state, action) => {
         ...byId,
         [action.key]: {
           ...field,
-          value: action.value,
+          value: transform(parse(action.value)),
           meta: {
             ...field.meta,
             pristine: false,
@@ -128,6 +129,7 @@ const touchAllFields = state => {
   const { byId, allIds } = fields;
 
   return {
+    ...state,
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
@@ -159,6 +161,7 @@ const setValidating = state => {
   const { byId, allIds } = fields;
 
   return {
+    ...state,
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
@@ -257,6 +260,7 @@ const resetField = (state, action) => {
   const field = byId[key];
 
   return {
+    ...state,
     fields: {
       ...fields,
       byId: {
@@ -273,8 +277,8 @@ const resetField = (state, action) => {
             valid: true,
             invalid: false,
           },
+          errors: [],
         },
-        errors: [],
       },
     },
   };
@@ -290,6 +294,7 @@ const resetAllFields = state => {
   const { byId, allIds } = fields;
 
   return {
+    ...state,
     fields: {
       ...fields,
       byId: allIds.reduce((acc, id) => {
@@ -322,6 +327,7 @@ const validationFieldDone = (state, action) => {
   const field = byId[key];
 
   return {
+    ...state,
     fields: {
       ...fields,
       byId: {

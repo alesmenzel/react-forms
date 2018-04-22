@@ -14,7 +14,6 @@ class Provider extends Component {
   cancelFieldValidations = [];
   cancelFormValidation = noop;
   submit = null;
-  i = 0;
 
   dispatch(action) {
     utils.log(this.state, action);
@@ -136,8 +135,7 @@ class Provider extends Component {
    * Validates the form
    */
   validate = async () => {
-    this.i += 1; // TODO: remove - debugging
-    debug(`[${this.i}] Validate: Start`);
+    debug(`Validate: Start`);
 
     if (!this.state.fields.allIds.length) {
       return;
@@ -192,7 +190,7 @@ class Provider extends Component {
         throw err;
       }
 
-      debug(`[${this.i}] Field '${id}' validation done`);
+      debug(`Validate: Field '${id}' validation done`);
       this.dispatch(actions.fieldValidationDone(id));
     };
 
@@ -306,8 +304,7 @@ class Provider extends Component {
 
     return (
       <FormContext.Provider value={value}>
-        {' '}
-        {this.props.children}{' '}
+        {this.props.children}
       </FormContext.Provider>
     );
   }

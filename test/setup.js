@@ -1,4 +1,8 @@
 const { JSDOM } = require('jsdom');
+const chai = require('chai');
+const dirtyChai = require('dirty-chai');
+
+chai.use(dirtyChai);
 
 const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
 const { window } = jsdom;
