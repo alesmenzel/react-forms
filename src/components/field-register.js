@@ -42,6 +42,7 @@ class FieldRegister extends Component {
       handleTouch,
       handleResetField,
       component,
+      children,
       ...rest
     } = this.props;
 
@@ -49,7 +50,7 @@ class FieldRegister extends Component {
       return null;
     }
 
-    const RenderComponent = component;
+    const RenderComponent = children || component;
 
     const onChange = val => {
       handleChange(name, transform(val, fields));
@@ -62,12 +63,10 @@ class FieldRegister extends Component {
         {(focused, setFocused, setBlured) => {
           const onFocus = () => {
             setFocused();
-            // handleFocus();
           };
 
           const onBlur = () => {
             setBlured();
-            // handleBlur();
             handleTouch(name);
           };
 
@@ -99,6 +98,7 @@ FieldRegister.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
   component: PropTypes.any.isRequired,
+  children: PropTypes.any.isRequired,
   label: PropTypes.string,
   parse: PropTypes.func,
   transform: PropTypes.func,

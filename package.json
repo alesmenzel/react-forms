@@ -1,12 +1,12 @@
 {
-  "name": "react-forms",
+  "name": "formulary",
   "description": "React components for easy form implementation.",
   "keywords": [
     "react",
     "reactjs",
     "form"
   ],
-  "version": "2.0.0",
+  "version": "0.2.0",
   "license": "MIT",
   "main": "./lib/index.js",
   "module": "./es/index.js",
@@ -81,8 +81,8 @@
     "webpack-cli": "^2.0.15"
   },
   "peerDependencies": {
-    "react": "^16.3.0-alpha.3",
-    "react-dom": "^16.3.0-alpha.3"
+    "react": "^16.3.0",
+    "react-dom": "^16.3.0"
   },
   "husky": {
     "hooks": {
