@@ -1,12 +1,27 @@
+# Babel Config
 .babelrc
-.prettierrc
-.prettierignore
+
+# ESlint Config
 .eslintrc
 .eslintignore
+
+# Prettier Config
+.prettierrc
+.prettierignore
+
+# Webpack Config
 webpack.config.js
+
+# Continuous Integration
 .circleci/
+
+# IDE
 .vscode/
+
+# Source Code
 src/
 test/
+
+# Unnecessary Documentation
 CODE_OF_CONDUCT.md
 NEXT.md
