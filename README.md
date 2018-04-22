@@ -1,4 +1,4 @@
-# ☄️ Formulary - React Forms ☄️
+# ☄️ Formulary - React Forms ☄️[![CircleCI](https://circleci.com/gh/AlesMenzel/react-forms/tree/master.svg?style=svg)](https://circleci.com/gh/AlesMenzel/react-forms/tree/master)
 
 React Forms package offers easy to use forms with validations. It uses the new [React Context API](https://reactjs.org/blog/2018/03/29/react-v-16-3.html) that was introduced in [React 16.3.0](https://reactjs.org/blog/2018/03/29/react-v-16-3.html). React Forms handles the form state for you and offer simply API to read/write to the state.
 
