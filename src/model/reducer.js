@@ -171,6 +171,8 @@ const setValidating = state => {
           ...field,
           meta: {
             ...field.meta,
+            valid: true,
+            invalid: false,
             validating: true,
           },
           errors: [],
@@ -198,16 +200,16 @@ const setErrors = (state, action) => {
       ...fields,
       byId: allIds.reduce((acc, id) => {
         const field = byId[id];
+        const fieldErrors = errors[id] || [];
 
         acc[id] = {
           ...field,
           meta: {
             ...field.meta,
-            valid: !errors[id].length,
-            invalid: !!errors[id].length,
-            validating: true,
+            valid: !fieldErrors.length,
+            invalid: !!fieldErrors.length,
           },
-          errors: errors[id],
+          errors: fieldErrors,
         };
         return acc;
       }, {}),

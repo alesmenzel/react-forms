@@ -12,6 +12,7 @@ class FormRegister extends Component {
       isRegistered,
       handleSubmit,
       registerSubmit,
+      onSubmit,
       ...rest
     } = this.props;
 

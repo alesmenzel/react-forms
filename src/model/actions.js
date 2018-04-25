@@ -23,9 +23,9 @@ export const addError = (key, error) => ({
   error,
 });
 
-export const setErrors = err => ({
+export const setErrors = errors => ({
   type: types.SET_ERRORS,
-  errors: err.fields,
+  errors,
 });
 
 export const resetField = key => ({

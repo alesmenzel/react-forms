@@ -97,8 +97,8 @@ FieldRegister.propTypes = {
   isRegistered: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
-  component: PropTypes.any.isRequired,
-  children: PropTypes.any.isRequired,
+  component: PropTypes.any,
+  children: PropTypes.any,
   label: PropTypes.string,
   parse: PropTypes.func,
   transform: PropTypes.func,
@@ -125,6 +125,8 @@ FieldRegister.defaultProps = {
   handleChange: () => {},
   handleTouch: () => {},
   handleResetField: () => {},
+  component: null,
+  children: null,
 };
 
 export default FieldRegister;

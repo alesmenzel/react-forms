@@ -618,4 +618,94 @@ describe('reducer', () => {
       isRegistered: false,
     });
   });
+
+  it('should add errors after submit is rejected', () => {
+    const parse = val => `${val} -> parsed`;
+    const transform = val => `${val} -> transformed`;
+    const format = val => `${val} -> formatted`;
+
+    const actionRegisterField = key =>
+      actions.registerField({
+        key,
+        label: 'Field',
+        value: 'value',
+        parse,
+        transform,
+        format,
+        validate: [],
+      });
+    const stateWithField = reducer(undefined, actionRegisterField('field1'));
+    const stateWithTwoFields = reducer(
+      stateWithField,
+      actionRegisterField('field2')
+    );
+
+    const actionSetValidating = actions.setValidating();
+    const stateWithValidating = reducer(
+      stateWithTwoFields,
+      actionSetValidating
+    );
+
+    const errors = {
+      field1: ['Must be at least 10 characters long.', 'Field is requried.'],
+    };
+    const action = actions.setErrors(errors);
+    const state = reducer(stateWithValidating, action);
+
+    expect(state).to.be.deep.equal({
+      fields: {
+        allIds: ['field1', 'field2'],
+        byId: {
+          field1: {
+            value: 'value -> parsed -> transformed',
+            initialValue: 'value -> parsed -> transformed',
+            meta: {
+              key: 'field1',
+              label: 'Field',
+              pristine: true,
+              dirty: false,
+              touched: false,
+              untouched: true,
+              valid: false,
+              invalid: true,
+              validating: true,
+            },
+            functions: {
+              format,
+              parse,
+              transform,
+              validate: [],
+            },
+            errors: [
+              'Must be at least 10 characters long.',
+              'Field is requried.',
+            ],
+          },
+          field2: {
+            value: 'value -> parsed -> transformed',
+            initialValue: 'value -> parsed -> transformed',
+            meta: {
+              key: 'field2',
+              label: 'Field',
+              pristine: true,
+              dirty: false,
+              touched: false,
+              untouched: true,
+              valid: true,
+              invalid: false,
+              validating: true,
+            },
+            functions: {
+              format,
+              parse,
+              transform,
+              validate: [],
+            },
+            errors: [],
+          },
+        },
+      },
+      isRegistered: false,
+    });
+  });
 });

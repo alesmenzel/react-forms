@@ -236,7 +236,7 @@ class Provider extends Component {
   isValid = () => {
     const { fields } = this.state;
 
-    return fields.allIds.some(id => fields.byId[id].meta.invalid);
+    return !fields.allIds.some(id => fields.byId[id].meta.invalid);
   };
 
   /**
@@ -257,31 +257,37 @@ class Provider extends Component {
    *
    * @param {Object} e Event
    */
-  handleSubmit = async e => {
+  handleSubmit = async event => {
+    event.preventDefault();
+    event.persist();
+
     if (!this.submit) {
       debug(`Submit: Abort (You must register 'onSubmit' handler)`);
       return;
     }
 
     debug('Submit: Start');
-    e.preventDefault();
     await this.handleTouchAll();
 
     if (!this.isValid()) {
-      debug('Submit: Aborted (Some fields are not valid)');
+      debug('Submit: Aborted (Some fields are not valid)', this.state);
       return;
     }
+    debug('Submit: Fields are valid', this.state);
 
     const fieldValues = this.getFieldValues();
     try {
-      await this.submit(fieldValues, this.state);
+      debug('Submit: Runnning user defined submit function');
+      await this.submit(event, fieldValues, this.state);
     } catch (err) {
-      if (err instanceof Error) {
-        debug('Submit: Abort (User provided callback thrown an error)');
-        throw err;
+      if (err.fields) {
+        debug('Submit: Submit was rejected with field errors');
+        this.dispatch(actions.setErrors(err.fields));
+        return;
       }
 
-      debug('Submit: Abort ( ? )', err);
+      debug('Submit: Abort (User provided callback thrown an error)');
+      throw err;
     }
 
     debug('Submit: Done');
