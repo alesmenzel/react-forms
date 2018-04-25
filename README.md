@@ -59,7 +59,7 @@ _Note that our Field components can be nested several levels deep and still have
 import { Form, Field } from 'formulary';
 
 const MyForm = props => {
-  onSubmit = (values, state) => {
+  onSubmit = (event, values, state) => {
     // Call backend with your favourite request library
     return axios.post('/api/login', values).then(
       res => {
@@ -138,9 +138,9 @@ Field values:
 
 #### Form
 
-| Key        | Description                                                                                                  | Signature                 |
-| ---------- | ------------------------------------------------------------------------------------------------------------ | ------------------------- |
-| `onSubmit` | Will be fired only when the form is valid. Returning a rejected promise can be used to set errors on fields. | `onSubmit(values, state)` |
+| Key        | Description                                                                                                  | Signature                        |
+| ---------- | ------------------------------------------------------------------------------------------------------------ | -------------------------------- |
+| `onSubmit` | Will be fired only when the form is valid. Returning a rejected promise can be used to set errors on fields. | `onSubmit(event, values, state)` |
 
 ### Validation
 
