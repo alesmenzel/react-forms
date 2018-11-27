@@ -1,5 +1,7 @@
 # ☄️ Formulary - React Forms ☄️· [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/alesmenzel/react-forms/blob/master/LICENCE) [![npm version](https://badge.fury.io/js/formulary.svg)](https://badge.fury.io/js/formulary) [![CircleCI](https://circleci.com/gh/AlesMenzel/react-forms/tree/master.svg?style=svg)](https://circleci.com/gh/AlesMenzel/react-forms/tree/master)
 
+## (Work in progress)
+
 React Forms package offers easy to use forms with validations. It uses the new [React Context API](https://reactjs.org/blog/2018/03/29/react-v-16-3.html) that was introduced in [React 16.3.0](https://reactjs.org/blog/2018/03/29/react-v-16-3.html). React Forms handles the form state for you and offer simply API to read/write to the state.
 
 ## Useful link
@@ -12,8 +14,8 @@ Roadmap (future plans): [List of features](./NEXT.md)
 
 There already is a great library for managing forms, called [react-redux](https://github.com/erikras/redux-form). It uses Redux to keep the state. The advantage of using Redux is when:
 
-* you need to interact with your form data globally from your application
-* you use Redux time travel features to record user interaction
+- you need to interact with your form data globally from your application
+- you use Redux time travel features to record user interaction
 
 You can read more when you should use Redux in article [You Might Not Need Redux](https://medium.com/@dan_abramov/you-might-not-need-redux-be46360cf367) from Dan Abramov.
 
@@ -187,14 +189,14 @@ As you can see the validate prop accepts both functions and an array of function
 #### Built in validators
 
 Numbers:
-Name | Description | Signutare
---- | --- | ---
-`minimum` | Check whether the value is at least `min` | minimum(msg, min)
-`maximum` | Check whether the value is at most `max` | maximum(msg, max)
-`range` | Check whether the value is at least `min` and at most `max` | range(msg, min, max)
-`isNumber` | Check whether the value is a finite number | isNumber(msg)
-`isInteger` | Check wheteher the value is an integer (a whole number) | isInteger(msg)
-`isFloat` | Checks whether the value is a float | isFloat(msg)
+| Name | Description | Signutare |
+| ----------- | ----------------------------------------------------------- | -------------------- |
+| `minimum` | Check whether the value is at least `min` | minimum(msg, min) |
+| `maximum` | Check whether the value is at most `max` | maximum(msg, max) |
+| `range` | Check whether the value is at least `min` and at most `max` | range(msg, min, max) |
+| `isNumber` | Check whether the value is a finite number | isNumber(msg) |
+| `isInteger` | Check wheteher the value is an integer (a whole number) | isInteger(msg) |
+| `isFloat` | Checks whether the value is a float | isFloat(msg) |
 
 String:
 
