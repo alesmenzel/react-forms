@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 class FormRegister extends Component {
   componentDidMount() {
-    this.props.registerSubmit(this.props.onSubmit);
+    const { registerSubmit, onSubmit } = this.props;
+    registerSubmit(onSubmit);
   }
 
   render() {

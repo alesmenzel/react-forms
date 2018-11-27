@@ -1,6 +1,7 @@
 import Debug from 'debug';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import FormContext from './context';
 import cancelable, * as utils from '../utils';
 import reducer from '../model/reducer';
@@ -11,8 +12,11 @@ const noop = () => {};
 
 class Provider extends Component {
   state = reducer(undefined, actions.initialize);
+
   cancelFieldValidations = [];
+
   cancelFormValidation = noop;
+
   submit = null;
 
   dispatch(action) {
@@ -76,8 +80,10 @@ class Provider extends Component {
    * @param {String} key Input name
    */
   handleTouch = async key => {
+    const { fields } = this.state;
+
     // Short circuit if the field is already touched
-    if (this.state.fields.byId[key].meta.touched) {
+    if (fields.byId[key].meta.touched) {
       return Promise.resolve();
     }
 
@@ -136,8 +142,9 @@ class Provider extends Component {
    */
   validate = async () => {
     debug(`Validate: Start`);
+    const { fields } = this.state;
 
-    if (!this.state.fields.allIds.length) {
+    if (!fields.allIds.length) {
       return;
     }
 
@@ -147,7 +154,6 @@ class Provider extends Component {
     // Cancel all currently running asynchronous validations
     this.cancelValidations();
 
-    const { fields } = this.state;
     const { byId, allIds } = fields;
 
     // Validate all fields
@@ -294,6 +300,8 @@ class Provider extends Component {
   };
 
   render() {
+    const { children } = this.props;
+
     const value = {
       // State
       ...this.state,
@@ -309,9 +317,7 @@ class Provider extends Component {
     };
 
     return (
-      <FormContext.Provider value={value}>
-        {this.props.children}
-      </FormContext.Provider>
+      <FormContext.Provider value={value}>{children}</FormContext.Provider>
     );
   }
 }

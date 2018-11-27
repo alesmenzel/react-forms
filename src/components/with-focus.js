@@ -5,10 +5,14 @@ class WithFocus extends Component {
   state = { focused: false };
 
   onFocus = () => this.setState({ focused: true });
+
   onBlur = () => this.setState({ focused: false });
 
   render() {
-    return this.props.children(this.state.focused, this.onFocus, this.onBlur);
+    const { children } = this.props;
+    const { focused } = this.state;
+
+    return children(focused, this.onFocus, this.onBlur);
   }
 }
 
